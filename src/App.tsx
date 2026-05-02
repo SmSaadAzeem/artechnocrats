@@ -51,11 +51,16 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${
-      isScrolled ? 'bg-white border-sleek-border shadow-sm py-4' : 'bg-transparent border-transparent py-6'
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 border-b ${
+      isScrolled ? 'bg-white/95 backdrop-blur-md border-sleek-border shadow-sm py-4' : 'bg-transparent border-transparent py-6'
     }`}>
-      <div className="max-w-7xl mx-auto px-10 flex justify-between items-center">
-        <a href="#" className="flex items-center gap-2 group">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 flex justify-between items-center">
+        <motion.a 
+          href="#" 
+          className="flex items-center gap-2 group"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
           <div className="w-8 h-8 bg-sleek-blue flex items-center justify-center rounded">
             <Wind className="w-5 h-5 text-white" />
           </div>
@@ -64,35 +69,42 @@ const Navbar = () => {
           }`}>
             AR <span className="text-sleek-blue">TECHNOCRATS</span>
           </span>
-        </a>
+        </motion.a>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-10">
+        <div className="hidden md:flex items-center gap-8 lg:gap-10">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
-              className={`text-xs font-bold uppercase tracking-widest hover:text-sleek-blue transition-colors ${
-                isScrolled ? 'text-slate-500' : 'text-slate-300'
+              className={`text-xs font-bold uppercase tracking-widest hover:text-sleek-blue transition-colors relative group py-2 ${
+                isScrolled ? 'text-slate-500' : 'text-slate-200'
               }`}
             >
               {link.name}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-sleek-blue transition-all group-hover:w-full" />
             </a>
           ))}
-          <a
+          <motion.a
             href="#contact"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className="sleek-button"
           >
             GET A QUOTE
-          </a>
+          </motion.a>
         </div>
 
         {/* Mobile Menu Toggle */}
         <button 
-          className="md:hidden"
+          className="md:hidden p-2 rounded-lg bg-white/10"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          {isMobileMenuOpen ? <X className={isScrolled ? 'text-slate-800' : 'text-white'} /> : <Menu className={isScrolled ? 'text-slate-800' : 'text-white'} />}
+          {isMobileMenuOpen ? (
+            <X className={isScrolled ? 'text-slate-800' : 'text-white'} />
+          ) : (
+            <Menu className={isScrolled ? 'text-slate-800' : 'text-white'} />
+          )}
         </button>
       </div>
 
@@ -100,28 +112,36 @@ const Navbar = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 w-full bg-white border-b border-sleek-border shadow-xl py-8 flex flex-col items-center gap-8 md:hidden"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="absolute top-full left-0 w-full bg-white border-b border-sleek-border shadow-2xl overflow-hidden md:hidden"
           >
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
+            <div className="flex flex-col p-8 gap-6">
+              {navLinks.map((link, idx) => (
+                <motion.a
+                  key={link.name}
+                  href={link.href}
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: idx * 0.1 }}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-sm font-bold uppercase tracking-widest text-slate-800 hover:text-sleek-blue border-b border-slate-50 pb-2"
+                >
+                  {link.name}
+                </motion.a>
+              ))}
+              <motion.a
+                href="#contact"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-xs font-bold uppercase tracking-widest text-slate-800 hover:text-sleek-blue"
+                className="sleek-button w-full text-center py-4"
               >
-                {link.name}
-              </a>
-            ))}
-            <a
-              href="#contact"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="sleek-button w-3/4 text-center"
-            >
-              GET A QUOTE
-            </a>
+                GET A QUOTE
+              </motion.a>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -131,45 +151,65 @@ const Navbar = () => {
 
 const Hero = () => {
   return (
-    <section className="relative h-[80vh] flex items-center bg-sleek-dark px-10 overflow-hidden">
+    <section className="relative min-h-[90vh] md:h-screen flex items-center bg-sleek-dark px-6 md:px-10 overflow-hidden pt-32 md:pt-40">
       {/* Abstract Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="w-full h-full industrial-grid" />
       </div>
+      
+      {/* Background Glows */}
+      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-sleek-blue/20 rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-sleek-blue/10 rounded-full blur-[120px]" />
 
-      <div className="relative z-20 max-w-7xl mx-auto w-full grid md:grid-cols-2 items-center">
+      <div className="relative z-20 max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center">
         <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1 className="text-5xl md:text-7xl font-black text-white leading-tight uppercase tracking-tighter mb-6">
-            Complete Ventilation <br/>
-            <span className="text-sleek-blue">& HVAC Solutions.</span>
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: 60 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="h-1 bg-sleek-blue mb-8"
+          />
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black text-white leading-[1.1] uppercase tracking-tighter mb-8">
+            Complete <span className="text-sleek-blue">Ventilation</span> <br className="hidden lg:block"/>
+            & HVAC Solutions.
           </h1>
-          <p className="text-lg md:text-xl text-slate-400 font-medium mb-10 max-w-xl leading-relaxed">
-            Professional HVAC services for residential, commercial, and industrial sectors. 
-            Precision engineering for energy efficiency.
+          <p className="text-lg md:text-xl text-slate-400 font-medium mb-12 max-w-xl leading-relaxed">
+            Leading industrial HVAC contractor specializing in high-efficiency cooling, custom ventilation projects, and maintenance excellence.
           </p>
-          <div className="flex flex-wrap gap-4">
-            <a 
+          <div className="flex flex-wrap gap-6">
+            <motion.a 
               href="#contact" 
-              className="px-8 py-4 bg-sleek-blue text-white text-xs font-bold uppercase tracking-widest transition-all hover:bg-sleek-blue-dark active:scale-95 shadow-lg shadow-sleek-blue/20"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-10 py-5 bg-sleek-blue text-white text-xs font-bold uppercase tracking-[0.2em] transition-shadow hover:shadow-2xl hover:shadow-sleek-blue/40"
             >
               Get a Quote
-            </a>
-            <a 
-              href="#services" 
-              className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-bold uppercase tracking-widest hover:bg-white/20 transition-all underline underline-offset-8"
+            </motion.a>
+            <motion.a 
+              href="#services"
+              whileHover={{ x: 5 }}
+              className="group flex items-center gap-3 text-white text-xs font-bold uppercase tracking-[0.2em] border-b-2 border-white/10 pb-2 transition-colors hover:border-sleek-blue"
             >
               Our Expertise
-            </a>
+              <ChevronRight className="w-4 h-4 text-sleek-blue group-hover:translate-x-1 transition-transform" />
+            </motion.a>
           </div>
         </motion.div>
         
         <div className="hidden md:flex flex-col items-end">
-          <span className="text-slate-500 text-xs font-mono mb-4 tracking-widest">ESTABLISHED ENGINEERING EXCELLENCE</span>
-          <div className="w-48 h-1.5 bg-sleek-blue shadow-[0_0_20px_rgba(29,78,216,0.5)]"></div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.2 }}
+            className="text-right"
+          >
+            <span className="text-slate-500 text-[10px] font-mono mb-4 tracking-[0.4em] block">ESTABLISHED ENGINEERING EXCELLENCE</span>
+            <div className="w-64 h-1.5 bg-sleek-blue shadow-[0_0_30px_rgba(29,78,216,0.6)]"></div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -178,8 +218,8 @@ const Hero = () => {
 
 const About = () => {
   return (
-    <section id="about" className="py-24 bg-white border-b border-sleek-border">
-      <div className="max-w-7xl mx-auto px-10">
+    <section id="about" className="py-24 bg-white border-b border-sleek-border scroll-mt-24">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="grid lg:grid-cols-3 gap-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -232,25 +272,48 @@ const Values = () => {
     { title: "Excellence", desc: "Striving for the highest results." },
   ];
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { y: 20, opacity: 0 },
+    show: { y: 0, opacity: 1 }
+  };
+
   return (
-    <section id="values" className="py-24 bg-slate-50 border-b border-sleek-border">
-      <div className="max-w-7xl mx-auto px-10">
+    <section id="values" className="py-24 bg-slate-50 border-b border-sleek-border scroll-mt-24">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="flex justify-between items-end mb-16">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
             <h2 className="text-xs font-bold text-sleek-blue uppercase tracking-widest mb-4">Core Principles</h2>
             <h3 className="text-4xl font-black uppercase tracking-tighter">Our Values</h3>
-          </div>
+          </motion.div>
           <div className="hidden md:block w-24 h-1 bg-slate-200"></div>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
           {coreValues.map((value, idx) => (
             <motion.div
               key={value.title}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
+              variants={item}
+              whileHover={{ y: -5 }}
               className="p-8 sleek-card"
             >
               <span className="text-xs font-mono font-bold text-slate-300 block mb-4">0{idx + 1}</span>
@@ -258,7 +321,7 @@ const Values = () => {
               <p className="text-xs text-slate-500 font-medium leading-relaxed uppercase">{value.desc}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -266,8 +329,8 @@ const Values = () => {
 
 const Services = () => {
   return (
-    <section id="services" className="py-24 bg-white border-b border-sleek-border">
-      <div className="max-w-7xl mx-auto px-10">
+    <section id="services" className="py-24 bg-white border-b border-sleek-border scroll-mt-24">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="grid lg:grid-cols-2 gap-20">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -325,16 +388,25 @@ const Clientele = () => {
   ];
 
   return (
-    <section id="clients" className="py-20 bg-slate-900 border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-10">
+    <section id="clients" className="py-20 bg-slate-900 border-b border-white/10 scroll-mt-24">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
         <h2 className="text-xs font-bold text-sleek-blue uppercase tracking-[0.3em] mb-10 text-center">Trusted Industry Partners</h2>
-        <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="flex flex-wrap justify-center gap-x-8 gap-y-4"
+        >
           {clients.map((client) => (
-            <span key={client} className="text-[11px] font-bold text-slate-500 uppercase tracking-widest hover:text-white transition-colors cursor-default">
+            <motion.span 
+              key={client} 
+              whileHover={{ scale: 1.1, color: "#fff" }}
+              className="text-[11px] font-bold text-slate-500 uppercase tracking-widest transition-colors cursor-default"
+            >
               {client}
-            </span>
+            </motion.span>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -342,8 +414,8 @@ const Clientele = () => {
 
 const Contact = () => {
   return (
-    <section id="contact" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-10">
+    <section id="contact" className="py-24 bg-white scroll-mt-24">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="grid lg:grid-cols-2 gap-20">
           <div>
             <h2 className="text-xs font-bold text-sleek-blue uppercase tracking-widest mb-4">Connect</h2>
@@ -353,7 +425,10 @@ const Contact = () => {
             </p>
 
             <div className="space-y-10">
-              <div className="flex items-center gap-6">
+              <motion.div 
+                whileHover={{ x: 10 }}
+                className="flex items-center gap-6"
+              >
                 <div className="w-12 h-12 border border-sleek-border flex items-center justify-center text-sleek-blue">
                   <Phone className="w-5 h-5" />
                 </div>
@@ -361,9 +436,12 @@ const Contact = () => {
                   <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Direct Line</p>
                   <p className="text-lg font-black uppercase tracking-widest">+92 343 2210174</p>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="flex items-center gap-6">
+              <motion.div 
+                whileHover={{ x: 10 }}
+                className="flex items-center gap-6"
+              >
                 <div className="w-12 h-12 border border-sleek-border flex items-center justify-center text-sleek-blue">
                   <Mail className="w-5 h-5" />
                 </div>
@@ -371,7 +449,7 @@ const Contact = () => {
                   <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Electronic Mail</p>
                   <p className="text-lg font-black uppercase tracking-widest break-all">engineeringalrazzaq@gmail.com</p>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
 
@@ -400,13 +478,15 @@ const Contact = () => {
                 <label className="block text-[10px] font-black uppercase tracking-widest mb-2 text-slate-500">Message Brief</label>
                 <textarea rows={4} className="w-full px-4 py-4 bg-white border border-sleek-border outline-none focus:border-sleek-blue transition-all text-xs font-bold uppercase tracking-widest" placeholder="" />
               </div>
-              <button 
+              <motion.button 
                 type="submit" 
+                whileHover={{ backgroundColor: "var(--color-sleek-blue)" }}
+                whileTap={{ scale: 0.98 }}
                 onClick={(e) => e.preventDefault()}
-                className="w-full py-5 bg-sleek-dark text-white font-bold uppercase tracking-[0.2em] text-xs hover:bg-sleek-blue transition-all active:scale-[0.98]"
+                className="sleek-button w-full py-5 !text-xs"
               >
                 Submit Inquiry
-              </button>
+              </motion.button>
             </form>
           </motion.div>
         </div>
@@ -417,7 +497,7 @@ const Contact = () => {
 
 const Footer = () => {
   return (
-    <footer className="bg-sleek-dark py-12 px-10 border-t border-white/5">
+    <footer className="bg-sleek-dark py-12 px-6 md:px-10 border-t border-white/5">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="flex items-center gap-2 opacity-80">
           <Wind className="w-5 h-5 text-sleek-blue" />
